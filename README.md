@@ -82,7 +82,7 @@ This file lists all available trackers. Example entry:
 
 ## 🗺️ Roadmap
 
-* [ ] 🐧 **Linux Support:** Improve packaging and add distro-specific run instructions.
+* [ ] 🐧 **Platform Support:** Improve packaging and add platform-specific run instructions. Currently only on android but in future add support for windows, mac and iOS. 
 * [ ] 💾 **Persistence:** Save the last active tracker and tracking state across app restarts.
 * [ ] 🌍 **Localization:** Add support for translating tracker definitions and UI.
 * [ ] ✏️ **In-App Editor:** UI for creating and editing tracker JSON files directly in the app.
