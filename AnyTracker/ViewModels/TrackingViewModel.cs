@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Text.Json;
 using System.Windows.Input;
 using AnyTracker.Models;
 using AnyTracker.Pages;
@@ -39,7 +38,7 @@ public class TrackingViewModel : BindableObject
 
     // --- Bindable Properties ---
 
-    public ObservableCollection<TrackingStage> Stages { get; set; } = new();
+    public ObservableCollection<TrackingStage> Stages { get; set; } = [];
 
     public TrackingStage CurrentStage
     {
@@ -111,14 +110,17 @@ public class TrackingViewModel : BindableObject
         StopTracking(); // Reset state
         try
         {
-            await using var stream = await FileSystem.OpenAppPackageFileAsync(filename);
-            using var reader = new StreamReader(stream);
-            var json = await reader.ReadToEndAsync() ?? throw new NullReferenceException();
-            _currentConfig = JsonSerializer.Deserialize<TrackerConfig>(json) ?? throw new NullReferenceException();
+            _currentConfig = await ResourceHelper.LoadJsonResourceFile<TrackerConfig>(filename);
+
 
             // Update UI
             Stages.Clear();
-            foreach (var s in _currentConfig.Stages) Stages.Add(s);
+            var id = 1;
+            foreach (var s in _currentConfig.Stages)
+            {
+                s.Id = id++;
+                Stages.Add(s);
+            }
 
             TrackerTitle = _currentConfig.TrackerName;
             ElapsedTimeFontSize = _currentConfig.ElapsedTimeFontSize;
@@ -194,7 +196,7 @@ public class TrackingViewModel : BindableObject
     {
         // We pass the current title and a callback function(LoadTrackerConfig)
         // This acts as the bridge between Settings and Main Page
-        var settingsPage = new SettingsPage(TrackerTitle, fileName => { LoadTrackerConfig(fileName); });
+        var settingsPage = new SettingsPage(TrackerTitle, LoadTrackerConfig);
 
         // Use PushAsync for a "Page" transition, or PushModalAsync for a "Popup" feel
         // Settings are usually a PushAsync (slide in from right)

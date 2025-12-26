@@ -10,7 +10,7 @@ namespace AnyTracker;
 
 public class AndroidNotificationService : INotificationService
 {
-    private const string ChannelId = "fasting_progress_channel";
+    private const string ChannelId = "any_tracker_channel";
     private const int NotificationId = 1001;
     private readonly NotificationManager _notificationManager;
 
@@ -53,9 +53,9 @@ public class AndroidNotificationService : INotificationService
     {
         if (Build.VERSION.SdkInt < BuildVersionCodes.O) return;
 
-        var channel = new NotificationChannel(ChannelId, "Fasting Progress", NotificationImportance.Low)
+        var channel = new NotificationChannel(ChannelId, "Any Tracker Progress", NotificationImportance.Low)
         {
-            Description = "Shows ongoing fasting progress"
+            Description = "Shows ongoing tracking progress"
         };
         // Importance Low prevents the sound/vibration on every update
         _notificationManager.CreateNotificationChannel(channel);

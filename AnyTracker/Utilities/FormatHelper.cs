@@ -1,6 +1,6 @@
 namespace AnyTracker.Utilities;
 
-public class FormatHelper
+public static class FormatHelper
 {
     public static string FormatTime(TimeSpan span, string format)
     {

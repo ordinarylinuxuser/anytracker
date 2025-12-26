@@ -75,10 +75,7 @@
             </Button>
         </VerticalStackLayout>
 
-        <Border Grid.Row="2" Margin="20,5" BackgroundColor="#1E1E1E" Stroke="#333">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="6" />
-            </Border.StrokeShape>
+        <Border Grid.Row="2" Margin="20,5" BackgroundColor="#1E1E1E" Stroke="#333" StrokeShape="RoundRectangle 3">
 
             <VerticalStackLayout Spacing="5">
                 <Label Text="CURRENT STATUS" TextColor="#888" FontSize="10" Margin="5,0,0,0" FontAttributes="Bold" />
@@ -134,10 +131,9 @@
                                 Padding="0"
                                 BackgroundColor="#2D2D2D"
                                 Stroke="Transparent"
+                                StrokeShape="RoundRectangle 6"
                                 VerticalOptions="Start">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="16" />
-                            </Border.StrokeShape>
+
                             <Label Text="{Binding Icon}"
                                    FontSize="16"
                                    HorizontalOptions="Center"

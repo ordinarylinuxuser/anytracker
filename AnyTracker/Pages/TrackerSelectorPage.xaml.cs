@@ -1,5 +1,6 @@
-using System.Text.Json;
+using AnyTracker.Constants;
 using AnyTracker.Models;
+using AnyTracker.Utilities;
 
 namespace AnyTracker.Pages;
 
@@ -17,10 +18,9 @@ public partial class TrackerSelectorPage
     {
         try
         {
-            await using var stream = await FileSystem.OpenAppPackageFileAsync("tracker_manifest.json");
-            using var reader = new StreamReader(stream);
-            var json = await reader.ReadToEndAsync();
-            var items = JsonSerializer.Deserialize<List<TrackerManifestItem>>(json);
+            var items =
+                await ResourceHelper.LoadJsonResourceFile<List<TrackerManifestItem>>(AppConstants.TrackerManifestFile);
+
             TrackerList.ItemsSource = items;
         }
         catch (Exception ex)

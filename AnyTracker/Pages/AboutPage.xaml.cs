@@ -1,3 +1,5 @@
+using AnyTracker.Constants;
+
 namespace AnyTracker.Pages;
 
 public partial class AboutPage
@@ -11,6 +13,6 @@ public partial class AboutPage
     private async void OpenGithub_Clicked(object sender, EventArgs e)
     {
         // Replace with your actual repo URL
-        await Launcher.Default.OpenAsync("https://github.com/ordinarylinuxuser/AnyTracker");
+        await Launcher.Default.OpenAsync(AppConstants.GitHubRepoUrl);
     }
 }

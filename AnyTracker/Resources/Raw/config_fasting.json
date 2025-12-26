@@ -11,7 +11,6 @@
   },
   "Stages": [
     {
-      "Id": 1,
       "Title": "Anabolic Phase",
       "StartHour": 0,
       "EndHour": 4,
@@ -20,7 +19,6 @@
       "ColorHex": "#4CAF50"
     },
     {
-      "Id": 2,
       "Title": "Catabolic Phase",
       "StartHour": 4,
       "EndHour": 16,
@@ -29,7 +27,6 @@
       "ColorHex": "#FFC107"
     },
     {
-      "Id": 3,
       "Title": "Fat Burning (Ketosis)",
       "StartHour": 16,
       "EndHour": 24,
@@ -38,7 +35,6 @@
       "ColorHex": "#FF5722"
     },
     {
-      "Id": 4,
       "Title": "Autophagy",
       "StartHour": 24,
       "EndHour": 72,

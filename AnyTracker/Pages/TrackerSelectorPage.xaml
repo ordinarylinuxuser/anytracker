@@ -11,10 +11,11 @@
         <CollectionView x:Name="TrackerList" SelectionMode="Single" SelectionChanged="OnSelectionChanged">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Border Margin="0,5" BackgroundColor="#2D2D2D" Stroke="Transparent" Padding="10">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="6" />
-                        </Border.StrokeShape>
+                    <Border Margin="0,5"
+                            BackgroundColor="#2D2D2D"
+                            Stroke="Transparent"
+                            Padding="10"
+                            StrokeShape="RoundRectangle 6">
                         <Grid ColumnDefinitions="50, *">
                             <Label Text="{Binding Icon}" FontSize="24" VerticalOptions="Center" />
                             <Label Grid.Column="1" Text="{Binding Name}" TextColor="White" FontSize="18"

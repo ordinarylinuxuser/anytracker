@@ -16,7 +16,7 @@ public class TrackerConfig
     public required string ButtonStartText { get; set; }
     public required string ButtonStopText { get; set; }
     public required TrackingStage StoppedState { get; set; }
-    public required List<TrackingStage> Stages { get; set; }
+    public required List<TrackingStage> Stages { get; set; } = [];
 }
 
 public class TrackingStage

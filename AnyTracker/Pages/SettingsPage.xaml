@@ -12,10 +12,7 @@
             <VerticalStackLayout Spacing="10">
                 <Label Text="CONFIGURATION" TextColor="#2196F3" FontSize="12" FontAttributes="Bold" />
 
-                <Border BackgroundColor="#1E1E1E" Stroke="Transparent" Padding="15">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="6" />
-                    </Border.StrokeShape>
+                <Border BackgroundColor="#1E1E1E" Stroke="Transparent" Padding="15" StrokeShape="RoundRectangle 6">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnChangeTrackerTapped" />
                     </Border.GestureRecognizers>
@@ -33,10 +30,7 @@
             <VerticalStackLayout Spacing="10">
                 <Label Text="APP INFO" TextColor="#2196F3" FontSize="12" FontAttributes="Bold" />
 
-                <Border BackgroundColor="#1E1E1E" Stroke="Transparent" Padding="15">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="6" />
-                    </Border.StrokeShape>
+                <Border BackgroundColor="#1E1E1E" Stroke="Transparent" Padding="15" StrokeShape="RoundRectangle 6">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnAboutTapped" />
                     </Border.GestureRecognizers>
