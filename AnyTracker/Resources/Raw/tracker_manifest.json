@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "Intermittent Fasting",
+    "FileName": "config_fasting.json",
+    "Icon": "🍽️"
+  },
+  {
+    "Name": "Pomodoro Focus",
+    "FileName": "config_pomodoro.json",
+    "Icon": "🍅"
+  },
+  {
+    "Name": "Pregnancy Tracker",
+    "FileName": "config_pregnancy.json",
+    "Icon": "👶"
+  }
+]

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AnyTracker.Pages.SettingsPage"
+             BackgroundColor="#121212"
+             NavigationPage.HasNavigationBar="True"
+             Title="Settings">
+    <ScrollView>
+        <VerticalStackLayout Spacing="25" Padding="20">
+
+            <VerticalStackLayout Spacing="10">
+                <Label Text="CONFIGURATION" TextColor="#2196F3" FontSize="12" FontAttributes="Bold" />
+
+                <Border BackgroundColor="#1E1E1E" Stroke="Transparent" Padding="15">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="6" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnChangeTrackerTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="*, Auto">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="Active Tracker" TextColor="White" FontSize="16" />
+                            <Label x:Name="CurrentTrackerLabel" Text="Select a tracker type..." TextColor="Gray"
+                                   FontSize="12" />
+                        </VerticalStackLayout>
+                        <Label Grid.Column="1" Text="›" TextColor="Gray" FontSize="24" VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="10">
+                <Label Text="APP INFO" TextColor="#2196F3" FontSize="12" FontAttributes="Bold" />
+
+                <Border BackgroundColor="#1E1E1E" Stroke="Transparent" Padding="15">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="6" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnAboutTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label Grid.Column="0" Text="About Us" TextColor="White" FontSize="16"
+                               VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="›" TextColor="Gray" FontSize="24" VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
