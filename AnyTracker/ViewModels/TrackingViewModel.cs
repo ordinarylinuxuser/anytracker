@@ -3,9 +3,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Input;
-using AnyTracker.Constants;
 using AnyTracker.Models;
-using AnyTracker.Pages;
 using AnyTracker.Services;
 using AnyTracker.Utilities;
 
@@ -18,19 +16,14 @@ public class TrackingViewModel : BindableObject
     #region Private Fields
 
     private readonly IDbService _dbService;
+    private readonly TrackerService _trackerService;
     private readonly INotificationService _notificationService;
     private TrackerConfig _currentConfig;
-
     private TrackingStage _currentStage;
-
     private string _elapsedTime = "00:00:00";
-
     private bool _isTracking;
-
     private string _startStopButtonText;
-
     private DateTime _startTime;
-
     private IDispatcherTimer _timer;
 
     private string _trackerTitle;
@@ -39,15 +32,19 @@ public class TrackingViewModel : BindableObject
 
     #region Constructor
 
-    public TrackingViewModel(INotificationService notificationService, IDbService dbService)
+    public TrackingViewModel(INotificationService notificationService,
+        IDbService dbService,
+        TrackerService trackerService)
     {
+        _trackerService = trackerService;
         _dbService = dbService;
         _notificationService = notificationService;
         ToggleTrackingCommand = new Command(ToggleTracking);
-        OpenSettingsCommand = new Command(OpenSettings);
+        // Listen for config changes from Settings
+        _trackerService.OnTrackerChanged += OnConfigChanged;
 
-        // Load default config
-        LoadTrackerConfig(AppConstants.DefaultTrackerFile);
+        // Load initial state if ready
+        if (_trackerService.CurrentConfig != null) OnConfigChanged();
     }
 
     #endregion
@@ -125,11 +122,34 @@ public class TrackingViewModel : BindableObject
 
     // --- Commands ---
     public ICommand ToggleTrackingCommand { get; }
-    public ICommand OpenSettingsCommand { get; }
 
     #endregion
 
     #region Methods
+
+    private void OnConfigChanged()
+    {
+        _currentConfig = _trackerService.CurrentConfig;
+        ApplyConfig();
+    }
+
+    private void ApplyConfig()
+    {
+        StopTracking(); // Reset
+
+        Stages.Clear();
+        var id = 1;
+        foreach (var s in _currentConfig.Stages)
+        {
+            s.Id = id++;
+            Stages.Add(s);
+        }
+
+        TrackerTitle = _currentConfig.TrackerName;
+        ElapsedTimeFontSize = _currentConfig.ElapsedTimeFontSize;
+        CurrentStage = _currentConfig.StoppedState;
+        StartStopButtonText = _currentConfig.ButtonStartText ?? "Start Tracking";
+    }
 
     private async void LoadTrackerConfig(string filename)
     {
@@ -209,23 +229,9 @@ public class TrackingViewModel : BindableObject
         // (Similar logic to previous code for updating CurrentStage)
         if (activeStage != null && CurrentStage != activeStage) CurrentStage = activeStage;
 
-        var progress = _currentStage.Id * 100 / Stages.Count;
-
         // Update notification...
-        _notificationService.ShowStickyNotification(TrackerTitle, CurrentStage?.Title ?? "Tracking...", progress);
-    }
-
-    // --- Navigation Logic ---
-
-    private async void OpenSettings()
-    {
-        // We pass the current title and a callback function(LoadTrackerConfig)
-        // This acts as the bridge between Settings and Main Page
-        var settingsPage = new SettingsPage(TrackerTitle, LoadTrackerConfig);
-
-        // Use PushAsync for a "Page" transition, or PushModalAsync for a "Popup" feel
-        // Settings are usually a PushAsync (slide in from right)
-        await Application.Current.MainPage.Navigation.PushAsync(settingsPage);
+        _notificationService.ShowStickyNotification(TrackerTitle,
+            $"{CurrentStage?.Title ?? "Tracking..."} {ElapsedTime}");
     }
 
     #endregion

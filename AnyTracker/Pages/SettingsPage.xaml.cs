@@ -1,35 +1,39 @@
+#region
+
+using AnyTracker.Services;
+
+#endregion
+
 namespace AnyTracker.Pages;
 
 public partial class SettingsPage
 {
-    private readonly string _currentTrackerName;
-    private readonly Action<string> _onTrackerChanged;
+    private readonly TrackerService _trackerService;
 
-    public SettingsPage(string currentTrackerName, Action<string> onTrackerChanged)
+    public SettingsPage(TrackerService trackerService)
     {
         InitializeComponent();
-        _currentTrackerName = currentTrackerName;
-        _onTrackerChanged = onTrackerChanged;
+        _trackerService = trackerService;
 
-        CurrentTrackerLabel.Text = _currentTrackerName;
+        // Set initial label
+        UpdateLabel();
+
+        // Listen for changes (in case changed elsewhere)
+        _trackerService.OnTrackerChanged += UpdateLabel;
+    }
+
+    private void UpdateLabel()
+    {
+        if (_trackerService.CurrentConfig != null) CurrentTrackerLabel.Text = _trackerService.CurrentConfig.TrackerName;
     }
 
     private async void OnChangeTrackerTapped(object sender, EventArgs e)
     {
-        // Open the existing Selector Page
         var selectorPage = new TrackerSelectorPage();
 
         selectorPage.OnTrackerSelected += async item =>
         {
-            // 1. Notify MainViewModel to load the new file
-            _onTrackerChanged?.Invoke(item.FileName);
-
-            // 2. Update the label here immediately (optional, but looks nice)
-            CurrentTrackerLabel.Text = item.Name;
-
-            // 3. Close the Selector
-            // (The Selector code we wrote earlier closes itself, 
-            // but if it didn't, we would do it here).
+            await _trackerService.LoadTrackerConfigAsync(item.FileName);
         };
 
         await Navigation.PushModalAsync(selectorPage);

@@ -1,3 +1,5 @@
+#region
+
 using System.Diagnostics.CodeAnalysis;
 using Android.App;
 using Android.Content;
@@ -5,6 +7,8 @@ using Android.OS;
 using AndroidX.Core.App;
 using AnyTracker.Services;
 using Application = Android.App.Application;
+
+#endregion
 
 namespace AnyTracker;
 
@@ -22,7 +26,7 @@ public class AndroidNotificationService : INotificationService
         CreateNotificationChannel();
     }
 
-    public void ShowStickyNotification(string title, string message, int progressPercent)
+    public void ShowStickyNotification(string title, string message)
     {
         var context = Application.Context;
 
@@ -36,7 +40,6 @@ public class AndroidNotificationService : INotificationService
             .SetContentText(message)
             .SetSmallIcon(Android.Resource.Drawable.IcMenuRecentHistory) // Default android icon
             .SetOngoing(true) // This makes it "Sticky"
-            .SetProgress(100, progressPercent, false)
             .SetContentIntent(pendingIntent)
             .SetOnlyAlertOnce(true);
 

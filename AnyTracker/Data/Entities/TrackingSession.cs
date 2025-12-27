@@ -1,11 +1,14 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+#region
+
+using LiteDB;
+
+#endregion
 
 namespace AnyTracker.Data.Entities;
 
 public class TrackingSession
 {
-    [Key] public int Id { get; set; }
+    [BsonId] public int Id { get; set; }
 
     public string TrackerName { get; set; }
     public DateTime StartTime { get; set; }
@@ -13,7 +16,7 @@ public class TrackingSession
     public double DurationSeconds { get; set; }
 
     // Not mapped to DB, just for UI
-    [NotMapped]
+    [BsonIgnore]
     public string DurationDisplay
     {
         get

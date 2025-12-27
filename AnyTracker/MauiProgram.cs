@@ -1,6 +1,11 @@
-﻿using AnyTracker.Services;
+﻿#region
+
+using AnyTracker.Pages;
+using AnyTracker.Services;
 using AnyTracker.ViewModels;
 using Microsoft.Extensions.Logging;
+
+#endregion
 
 namespace AnyTracker;
 
@@ -28,9 +33,19 @@ public static class MauiProgram
     // Dummy implementation for iOS/Windows to prevent crashes
         builder.Services.AddSingleton<INotificationService>(new MockNotificationService());
 #endif
-        builder.Services.AddSingleton<IDbService, DbService>();
+        // Services
+        builder.Services.AddSingleton<IDbService, LiteDbService>(); // Swapped to LiteDB
+        builder.Services.AddSingleton<TrackerService>();
+
+        // ViewModels
         builder.Services.AddSingleton<TrackingViewModel>();
+
+        // Pages
+        builder.Services.AddSingleton<LoadingPage>();
         builder.Services.AddSingleton<MainPage>();
+        builder.Services.AddTransient<SettingsPage>();
+        builder.Services.AddTransient<TrackerSelectorPage>();
+        builder.Services.AddTransient<AboutPage>();
         return builder.Build();
     }
 }
