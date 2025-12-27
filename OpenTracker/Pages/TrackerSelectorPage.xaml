@@ -6,8 +6,12 @@
              BackgroundColor="#1E1E1E"
              Title="Select Tracker">
     <VerticalStackLayout Padding="20" Spacing="15">
-        <Label Text="Available Trackers" TextColor="White" FontSize="24" FontAttributes="Bold" />
-
+        <Grid ColumnDefinitions="*, Auto">
+            <Label Text="Available Trackers" TextColor="White" FontSize="24" FontAttributes="Bold"
+                   VerticalOptions="Center" />
+            <Button Grid.Column="1" Text="+" Clicked="OnAddTrackerClicked" WidthRequest="40" HeightRequest="40"
+                    Padding="0" />
+        </Grid>
         <CollectionView x:Name="TrackerList" SelectionMode="Single" SelectionChanged="OnSelectionChanged">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
@@ -16,10 +20,27 @@
                             Stroke="Transparent"
                             Padding="10"
                             StrokeShape="RoundRectangle 6">
-                        <Grid ColumnDefinitions="50, *">
-                            <Label Text="{Binding Icon}" FontSize="24" VerticalOptions="Center" />
+                        <Grid ColumnDefinitions="50, *, Auto, Auto" ColumnSpacing="5">
+
+                            <Label Grid.Column="0" Text="{Binding Icon}" FontSize="24" VerticalOptions="Center"
+                                   HorizontalOptions="Center" />
+
                             <Label Grid.Column="1" Text="{Binding Name}" TextColor="White" FontSize="18"
                                    VerticalOptions="Center" />
+
+                            <Button Grid.Column="2" Text="✏️"
+                                    Clicked="OnEditClicked"
+                                    CommandParameter="{Binding .}"
+                                    BackgroundColor="Transparent"
+                                    TextColor="White"
+                                    WidthRequest="40" HeightRequest="40" Padding="0" />
+
+                            <Button Grid.Column="3" Text="🗑️"
+                                    Clicked="OnDeleteClicked"
+                                    CommandParameter="{Binding .}"
+                                    BackgroundColor="Transparent"
+                                    TextColor="#FF5252"
+                                    WidthRequest="40" HeightRequest="40" Padding="0" />
                         </Grid>
                     </Border>
                 </DataTemplate>

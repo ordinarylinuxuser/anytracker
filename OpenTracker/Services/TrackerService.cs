@@ -46,6 +46,7 @@ public class TrackerService
                         var config = await ResourceHelper.LoadJsonResourceFile<TrackerConfig>(item.FileName);
                         // Link the config to the manifest item via FileName
                         config.FileName = item.FileName;
+                        config.TrackerName = item.Name;
                         rawConfigs.Add(config);
                     }
                     catch (Exception ex)
@@ -74,6 +75,7 @@ public class TrackerService
 
     public async Task LoadTrackerConfigAsync(string filename)
     {
+        if (CurrentConfig != null && CurrentConfig.FileName == filename) return;
         try
         {
             CurrentConfig = await _dbService.GetConfigAsync(filename);

@@ -40,16 +40,19 @@ public static class MauiProgram
         // ViewModels
         builder.Services.AddSingleton<MainViewModel>();
         builder.Services.AddSingleton<HistoryViewModel>();
+        builder.Services.AddTransient<TrackerEditorViewModel>();
 
         // Pages
         builder.Services.AddSingleton<LoadingPage>();
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<HistoryPage>();
 
+        builder.Services.AddTransient<TrackerEditorPage>();
         builder.Services.AddTransient<SettingsPage>();
         builder.Services.AddTransient<TrackerSelectorPage>();
         builder.Services.AddTransient<ManualEntryPage>();
         builder.Services.AddTransient<AboutPage>();
+
         return builder.Build();
     }
 }

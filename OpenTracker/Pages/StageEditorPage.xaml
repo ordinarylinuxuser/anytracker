@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OpenTracker.Pages.StageEditorPage"
+             BackgroundColor="#121212"
+             Title="Edit Stage">
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+
+            <Label Text="Stage Info" TextColor="#2196F3" FontAttributes="Bold" />
+            <Entry x:Name="TitleEntry" Placeholder="Stage Title" TextColor="White" />
+            <Entry x:Name="DescEntry" Placeholder="Description" TextColor="White" />
+
+            <Grid ColumnDefinitions="*, *">
+                <VerticalStackLayout>
+                    <Label Text="Start Hour" TextColor="Gray" FontSize="12" />
+                    <Entry x:Name="StartEntry" Keyboard="Numeric" TextColor="White" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1">
+                    <Label Text="End Hour" TextColor="Gray" FontSize="12" />
+                    <Entry x:Name="EndEntry" Keyboard="Numeric" TextColor="White" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <Label Text="Select Icon" TextColor="#2196F3" FontAttributes="Bold" />
+            <Entry x:Name="EmojiEntry" Placeholder="Type or paste emoji" TextColor="White"
+                   HorizontalTextAlignment="Center" FontSize="24" />
+            <FlexLayout Wrap="Wrap" JustifyContent="SpaceBetween" x:Name="EmojiGrid"
+                        BindableLayout.ItemsSource="{Binding Emojis}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Button Text="{Binding .}" BackgroundColor="#333" WidthRequest="45" HeightRequest="45"
+                                Padding="0" Clicked="OnEmojiClicked" />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+
+            <Label Text="Select Color" TextColor="#2196F3" FontAttributes="Bold" />
+            <FlexLayout Wrap="Wrap" JustifyContent="SpaceBetween" x:Name="ColorGrid" />
+
+            <Button Text="Save Stage" Clicked="OnSaveClicked" Margin="0,20,0,0" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

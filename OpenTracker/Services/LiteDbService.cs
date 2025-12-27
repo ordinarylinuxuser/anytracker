@@ -79,4 +79,35 @@ public class LiteDbService : IDbService
             return col.FindById(fileName);
         });
     }
+
+    // --- New Methods Implementation ---
+
+    public async Task SaveTrackerAsync(TrackerManifestItem manifestItem, TrackerConfig config)
+    {
+        await Task.Run(() =>
+        {
+            using var db = new LiteDatabase(_dbPath);
+            var manifestCol = db.GetCollection<TrackerManifestItem>("manifest");
+            var configCol = db.GetCollection<TrackerConfig>("configs");
+
+            // Upsert Manifest (Insert or Update)
+            manifestCol.Upsert(manifestItem);
+
+            // Upsert Config
+            configCol.Upsert(config);
+        });
+    }
+
+    public async Task DeleteTrackerAsync(string fileName)
+    {
+        await Task.Run(() =>
+        {
+            using var db = new LiteDatabase(_dbPath);
+            var manifestCol = db.GetCollection<TrackerManifestItem>("manifest");
+            var configCol = db.GetCollection<TrackerConfig>("configs");
+
+            manifestCol.Delete(fileName);
+            configCol.Delete(fileName);
+        });
+    }
 }

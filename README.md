@@ -101,7 +101,7 @@ This file registers available trackers in the app.
 * [ ] 🐧 **Platform Support:** iOS
 * [ ] 🌍 **Localization:** Add support for translating tracker definitions and UI.
 * [ ] ☁️ **Cloud Sync:** Backup and sync history across devices.
-* [ ] ✏️ **In-App Editor:** UI for creating and editing tracker JSON files directly in the app.
+* [x] ✏️ **In-App Editor:** UI for creating and editing tracker JSON files directly in the app.
 * [ ] 📦 **Export Data:** Export history to CSV or JSON.
 
 ---

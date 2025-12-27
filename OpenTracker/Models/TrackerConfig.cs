@@ -18,7 +18,7 @@ public class TrackerConfig
     // We add FileName as the ID to retrieve config by the filename in the manifest
     [BsonId] public string FileName { get; set; } = string.Empty;
 
-    public required string TrackerName { get; set; }
+    public string TrackerName { get; set; } = string.Empty;
     public string DisplayFormat { get; set; } = "Time";
 
     public double ElapsedTimeFontSize { get; set; } = 36d;

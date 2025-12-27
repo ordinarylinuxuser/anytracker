@@ -16,4 +16,8 @@ public interface IDbService
     Task SeedDatabaseAsync(List<TrackerManifestItem> manifest, List<TrackerConfig> configs);
     Task<List<TrackerManifestItem>> GetManifestAsync();
     Task<TrackerConfig?> GetConfigAsync(string fileName);
+
+    // New Methods for Editing
+    Task SaveTrackerAsync(TrackerManifestItem manifestItem, TrackerConfig config);
+    Task DeleteTrackerAsync(string fileName);
 }

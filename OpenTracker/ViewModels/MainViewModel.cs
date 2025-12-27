@@ -138,6 +138,10 @@ public class MainViewModel : BindableObject
 
     private void OnConfigChanged()
     {
+        // FIX: If we are currently tracking, stop the session before switching.
+        // This ensures data integrity and resets the UI for the new tracker.
+        if (IsTracking) StopTracking();
+
         _currentConfig = _trackerService.CurrentConfig;
         if (_currentConfig == null) return;
 

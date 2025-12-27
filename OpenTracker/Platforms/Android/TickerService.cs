@@ -44,17 +44,19 @@ public class TickerService : Service
 
         if (intent != null)
         {
-            var ticks = intent.GetLongExtra("StartTime", DateTime.Now.Ticks);
-            _startTime = new DateTime(ticks);
-            _trackerTitle = intent.GetStringExtra("TrackerName") ?? "OpenTracker";
-            _currentStage = intent.GetStringExtra("StageName") ?? "Tracking...";
-            _displayFormat = intent.GetStringExtra("DisplayFormat") ?? "Time";
-
             if (intent.HasExtra("UpdateStageOnly"))
             {
                 _currentStage = intent.GetStringExtra("StageName");
                 UpdateNotification();
                 return StartCommandResult.Sticky;
+            }
+            else
+            {
+                var ticks = intent.GetLongExtra("StartTime", DateTime.Now.Ticks);
+                _startTime = new DateTime(ticks);
+                _trackerTitle = intent.GetStringExtra("TrackerName") ?? "OpenTracker";
+                _currentStage = intent.GetStringExtra("StageName") ?? "Tracking...";
+                _displayFormat = intent.GetStringExtra("DisplayFormat") ?? "Time";
             }
         }
 
@@ -73,6 +75,8 @@ public class TickerService : Service
 
         if (_timer == null)
         {
+            // We still keep the timer to check for Stage transitions,
+            // but the UI tick is handled by the Chronometer for "Time" mode.
             _timer = new Timer(1000);
             _timer.Elapsed += OnTimerTick;
             _timer.Start();
@@ -83,6 +87,9 @@ public class TickerService : Service
 
     private void OnTimerTick(object sender, ElapsedEventArgs e)
     {
+        // We periodically re-issue the notification.
+        // This ensures Stage transitions are reflected.
+        // For "Time" format, the Chronometer handles the seconds visually.
         UpdateNotification();
     }
 
@@ -96,7 +103,6 @@ public class TickerService : Service
     private Notification BuildNotification()
     {
         var elapsed = DateTime.Now - _startTime;
-        var timeString = FormatHelper.FormatTime(elapsed, _displayFormat);
 
         // Intent to open app when tapped
         var intent = PackageManager?.GetLaunchIntentForPackage(PackageName);
@@ -104,11 +110,31 @@ public class TickerService : Service
 
         var builder = new NotificationCompat.Builder(this, ChannelId)
             .SetContentTitle(_trackerTitle)
-            .SetContentText($"{_currentStage}  {timeString}")
             .SetSmallIcon(ResourceConstant.Drawable.ic_stat_tracker) // Ensure this icon exists
             .SetContentIntent(pendingIntent)
             .SetOnlyAlertOnce(true)
             .SetOngoing(true);
+
+        // FIX: Use Native Android Chronometer for standard "Time" format.
+        // This eliminates the visual lag caused by delayed timer ticks.
+        if (_displayFormat == "Time")
+        {
+            // Convert .NET DateTime to Java Epoch Milliseconds
+            var javaStartTime = new DateTimeOffset(_startTime).ToUnixTimeMilliseconds();
+
+            builder.SetContentText($"{_currentStage}"); // Just stage name, time is handled by system
+            builder.SetWhen(javaStartTime);
+            builder.SetUsesChronometer(true);
+        }
+        else
+        {
+            // For custom formats (Weeks, Days, etc), keep the manual update
+            // as Chronometer only supports H:MM:SS
+            var timeString = FormatHelper.FormatTime(elapsed, _displayFormat);
+            builder.SetContentText($"{_currentStage}  {timeString}");
+            builder.SetUsesChronometer(false);
+            builder.SetWhen(0); // Hide timestamp
+        }
 
         return builder.Build();
     }

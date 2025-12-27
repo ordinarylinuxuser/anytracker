@@ -34,7 +34,8 @@ public partial class SettingsPage
 
         selectorPage.OnTrackerSelected += async item =>
         {
-            await _trackerService.LoadTrackerConfigAsync(item.FileName);
+            if (item.Name != _trackerService.CurrentConfig.TrackerName)
+                await _trackerService.LoadTrackerConfigAsync(item.FileName);
         };
 
         await Navigation.PushModalAsync(selectorPage);
