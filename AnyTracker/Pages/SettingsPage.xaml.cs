@@ -29,7 +29,8 @@ public partial class SettingsPage
 
     private async void OnChangeTrackerTapped(object sender, EventArgs e)
     {
-        var selectorPage = new TrackerSelectorPage();
+        // Pass the service to the selector
+        var selectorPage = new TrackerSelectorPage(_trackerService);
 
         selectorPage.OnTrackerSelected += async item =>
         {

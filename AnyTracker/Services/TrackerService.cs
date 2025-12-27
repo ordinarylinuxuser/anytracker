@@ -11,34 +11,83 @@ namespace AnyTracker.Services;
 
 public class TrackerService
 {
+    private readonly IDbService _dbService;
+
     public TrackerConfig CurrentConfig { get; private set; }
     public List<TrackerManifestItem> Manifest { get; private set; } = [];
 
+    private const string LastConfigKey = "LastConfigFileName";
+
     public event Action OnTrackerChanged;
+
+    public TrackerService(IDbService dbService)
+    {
+        _dbService = dbService;
+    }
 
     public async Task InitializeAsync()
     {
-        // 1. Load Manifest
         try
         {
-            Manifest =
-                await ResourceHelper.LoadJsonResourceFile<List<TrackerManifestItem>>(AppConstants.TrackerManifestFile);
+            // 1. Check if DB is initialized
+            var existingManifest = await _dbService.GetManifestAsync();
+
+            if (existingManifest == null || existingManifest.Count == 0)
+            {
+                // Load from Resources
+                var rawManifest =
+                    await ResourceHelper.LoadJsonResourceFile<List<TrackerManifestItem>>(AppConstants
+                        .TrackerManifestFile);
+                var rawConfigs = new List<TrackerConfig>();
+
+                foreach (var item in rawManifest)
+                    try
+                    {
+                        var config = await ResourceHelper.LoadJsonResourceFile<TrackerConfig>(item.FileName);
+                        // Link the config to the manifest item via FileName
+                        config.FileName = item.FileName;
+                        rawConfigs.Add(config);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Failed to load resource {item.FileName}: {ex.Message}");
+                    }
+
+                // Save to DB
+                await _dbService.SeedDatabaseAsync(rawManifest, rawConfigs);
+                Manifest = rawManifest;
+            }
+            else
+            {
+                Manifest = existingManifest;
+            }
+
+            // 2. Load Config (Last used or Default)
+            var lastConfig = Preferences.Get(LastConfigKey, AppConstants.DefaultTrackerFile);
+            await LoadTrackerConfigAsync(lastConfig);
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Error loading manifest: {ex.Message}");
+            Debug.WriteLine($"Error initializing tracker service: {ex.Message}");
         }
-
-        // 2. Load Default Config (or last used)
-        // For now, default to the one in AppConstants
-        await LoadTrackerConfigAsync(AppConstants.DefaultTrackerFile);
     }
 
     public async Task LoadTrackerConfigAsync(string filename)
     {
         try
         {
-            CurrentConfig = await ResourceHelper.LoadJsonResourceFile<TrackerConfig>(filename);
+            CurrentConfig = await _dbService.GetConfigAsync(filename);
+
+            // Fallback if DB fetch fails (shouldn't happen after seed)
+            if (CurrentConfig == null)
+            {
+                Debug.WriteLine($"Config {filename} not found in DB, attempting resource load.");
+                CurrentConfig = await ResourceHelper.LoadJsonResourceFile<TrackerConfig>(filename);
+            }
+
+            // Save preference
+            Preferences.Set(LastConfigKey, filename);
+
             OnTrackerChanged?.Invoke();
         }
         catch (Exception ex)

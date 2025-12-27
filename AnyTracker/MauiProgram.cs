@@ -34,18 +34,22 @@ public static class MauiProgram
         builder.Services.AddSingleton<INotificationService>(new MockNotificationService());
 #endif
         // Services
-        builder.Services.AddSingleton<IDbService, LiteDbService>(); // Swapped to LiteDB
+        builder.Services.AddSingleton<IDbService, LiteDbService>();
         builder.Services.AddSingleton<TrackerService>();
 
         // ViewModels
+        builder.Services.AddSingleton<MainViewModel>();
+        builder.Services.AddSingleton<HistoryViewModel>();
 
         // Pages
         builder.Services.AddSingleton<LoadingPage>();
-        builder.Services.AddSingleton<MainViewModel>();
         builder.Services.AddSingleton<MainPage>();
+        builder.Services.AddSingleton<HistoryPage>();
+
         builder.Services.AddTransient<SettingsPage>();
         builder.Services.AddTransient<TrackerSelectorPage>();
         builder.Services.AddTransient<AboutPage>();
+        return builder.Build();
         return builder.Build();
     }
 }

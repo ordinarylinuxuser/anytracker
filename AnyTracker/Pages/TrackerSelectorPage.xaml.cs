@@ -1,14 +1,28 @@
+#region
+
 using AnyTracker.Constants;
 using AnyTracker.Models;
+using AnyTracker.Services;
 using AnyTracker.Utilities;
+
+#endregion
 
 namespace AnyTracker.Pages;
 
 public partial class TrackerSelectorPage
 {
+    private readonly TrackerService _trackerService;
+
+    // Default constructor for XAML previewer (optional) or fallback
     public TrackerSelectorPage()
     {
         InitializeComponent();
+    }
+
+    public TrackerSelectorPage(TrackerService trackerService)
+    {
+        InitializeComponent();
+        _trackerService = trackerService;
         LoadManifest();
     }
 
@@ -18,10 +32,19 @@ public partial class TrackerSelectorPage
     {
         try
         {
-            var items =
-                await ResourceHelper.LoadJsonResourceFile<List<TrackerManifestItem>>(AppConstants.TrackerManifestFile);
-
-            TrackerList.ItemsSource = items;
+            if (_trackerService != null)
+            {
+                // Load from service (which loads from DB)
+                TrackerList.ItemsSource = _trackerService.Manifest;
+            }
+            else
+            {
+                // Fallback if service not injected (e.g. testing)
+                var items =
+                    await ResourceHelper.LoadJsonResourceFile<List<TrackerManifestItem>>(AppConstants
+                        .TrackerManifestFile);
+                TrackerList.ItemsSource = items;
+            }
         }
         catch (Exception ex)
         {

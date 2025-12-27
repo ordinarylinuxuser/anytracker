@@ -1,4 +1,8 @@
-using AnyTracker.Data.Entities;
+#region
+
+using AnyTracker.Models;
+
+#endregion
 
 namespace AnyTracker.Services;
 
@@ -6,5 +10,10 @@ public interface IDbService
 {
     Task AddSessionAsync(TrackingSession session);
 
-    Task<List<TrackingSession>> GetHistoryAsync();
+    Task<List<TrackingSession>> GetHistoryAsync(string tackerName);
+
+    // Configuration & Manifest
+    Task SeedDatabaseAsync(List<TrackerManifestItem> manifest, List<TrackerConfig> configs);
+    Task<List<TrackerManifestItem>> GetManifestAsync();
+    Task<TrackerConfig?> GetConfigAsync(string fileName);
 }

@@ -4,7 +4,7 @@ using LiteDB;
 
 #endregion
 
-namespace AnyTracker.Data.Entities;
+namespace AnyTracker.Models;
 
 public class TrackingSession
 {

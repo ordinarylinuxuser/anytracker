@@ -1,7 +1,7 @@
 #region
 
 using AnyTracker.Constants;
-using AnyTracker.Data.Entities;
+using AnyTracker.Models;
 using LiteDB;
 
 #endregion
@@ -30,15 +30,53 @@ public class LiteDbService : IDbService
         });
     }
 
-    public async Task<List<TrackingSession>> GetHistoryAsync()
+    public async Task<List<TrackingSession>> GetHistoryAsync(string trackerName)
     {
         return await Task.Run(() =>
         {
             using var db = new LiteDatabase(_dbPath);
             var col = db.GetCollection<TrackingSession>("sessions");
             return col.Query()
+                .Where(s => s.TrackerName.Equals(trackerName, StringComparison.OrdinalIgnoreCase))
                 .OrderByDescending(x => x.StartTime)
                 .ToList();
+        });
+    }
+
+    public async Task SeedDatabaseAsync(List<TrackerManifestItem> manifest, List<TrackerConfig> configs)
+    {
+        await Task.Run(() =>
+        {
+            using var db = new LiteDatabase(_dbPath);
+            var manifestCol = db.GetCollection<TrackerManifestItem>("manifest");
+            var configCol = db.GetCollection<TrackerConfig>("configs");
+
+            // Only insert if empty
+            if (manifestCol.Count() == 0)
+            {
+                manifestCol.InsertBulk(manifest);
+                configCol.InsertBulk(configs);
+            }
+        });
+    }
+
+    public async Task<List<TrackerManifestItem>> GetManifestAsync()
+    {
+        return await Task.Run(() =>
+        {
+            using var db = new LiteDatabase(_dbPath);
+            var col = db.GetCollection<TrackerManifestItem>("manifest");
+            return col.FindAll().ToList();
+        });
+    }
+
+    public async Task<TrackerConfig?> GetConfigAsync(string fileName)
+    {
+        return await Task.Run(() =>
+        {
+            using var db = new LiteDatabase(_dbPath);
+            var col = db.GetCollection<TrackerConfig>("configs");
+            return col.FindById(fileName);
         });
     }
 }

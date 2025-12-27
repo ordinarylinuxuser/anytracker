@@ -16,7 +16,9 @@
         <Tab Title="Tracker" Icon="tracker">
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
         </Tab>
-
+        <Tab Title="History" Icon="history">
+            <ShellContent ContentTemplate="{DataTemplate pages:HistoryPage}" />
+        </Tab>
         <Tab Title="Settings" Icon="settings">
             <ShellContent ContentTemplate="{DataTemplate pages:SettingsPage}" />
         </Tab>

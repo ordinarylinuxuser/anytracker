@@ -1,14 +1,23 @@
+#region
+
+using LiteDB;
+
+#endregion
+
 namespace AnyTracker.Models;
 
 public class TrackerManifestItem
 {
     public required string Name { get; set; }
-    public required string FileName { get; set; }
+    [BsonId] public required string FileName { get; set; }
     public required string Icon { get; set; }
 }
 
 public class TrackerConfig
 {
+    // We add FileName as the ID to retrieve config by the filename in the manifest
+    [BsonId] public string FileName { get; set; } = string.Empty;
+
     public required string TrackerName { get; set; }
     public string DisplayFormat { get; set; } = "Time";
 
@@ -30,5 +39,5 @@ public class TrackingStage
     public required string ColorHex { get; set; }
 
     // Helper for UI to check if this is the active stage
-    public bool IsActive { get; set; }
+    [BsonIgnore] public bool IsActive { get; set; }
 }
