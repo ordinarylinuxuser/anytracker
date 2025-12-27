@@ -2,6 +2,7 @@ namespace OpenTracker.Services;
 
 public interface INotificationService
 {
-    void ShowStickyNotification(string title, string message);
-    void CancelNotification();
+    void StartNotification(string trackerName, string stageName, DateTime startTime, string displayFormat);
+    void UpdateStage(string stageName);
+    void StopNotification();
 }

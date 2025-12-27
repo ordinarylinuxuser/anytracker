@@ -211,6 +211,14 @@ public class MainViewModel : BindableObject
         }
 
         _timer.Start();
+
+        // Start the background notification service
+        _notificationService.StartNotification(
+            TrackerTitle,
+            CurrentStage?.Title ?? "Tracking...",
+            _startTime,
+            _currentConfig?.DisplayFormat ?? "Time");
+
         UpdateProgress();
     }
 
@@ -236,7 +244,8 @@ public class MainViewModel : BindableObject
         Preferences.Set(PrefIsTracking, false);
         Preferences.Remove(PrefStartTime);
         _timer?.Stop();
-        _notificationService.CancelNotification();
+        // Stop the background service
+        _notificationService.StopNotification();
 
         // Revert to config fallback
         if (_currentConfig != null)
@@ -264,13 +273,15 @@ public class MainViewModel : BindableObject
             // If we are past the last stage, stay on the last stage or define behavior
             if (activeStage == null && Stages.Any() && totalHours > Stages.Last().EndHour) activeStage = Stages.Last();
 
-            if (activeStage != null && CurrentStage != activeStage) CurrentStage = activeStage;
+            if (activeStage != null && CurrentStage != activeStage)
+            {
+                CurrentStage = activeStage;
+                // Update the notification text if the stage changes
+                _notificationService.UpdateStage(CurrentStage.Title);
+            }
 
             foreach (var s in Stages) s.IsActive = s == activeStage;
         }
-
-        _notificationService.ShowStickyNotification(TrackerTitle,
-            $"{CurrentStage?.Title ?? "Tracking..."} {ElapsedTime}");
     }
 
     private async Task EditElapsedTime()
@@ -294,6 +305,12 @@ public class MainViewModel : BindableObject
         {
             // Just update the persistent time and refresh UI immediately
             Preferences.Set(PrefStartTime, _startTime);
+            // Restart notification to sync the new start time
+            _notificationService.StartNotification(
+                TrackerTitle,
+                CurrentStage?.Title ?? "Tracking...",
+                _startTime,
+                _currentConfig?.DisplayFormat ?? "Time");
             UpdateProgress();
         }
     }
