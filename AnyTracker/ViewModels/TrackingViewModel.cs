@@ -1,15 +1,23 @@
+#region
+
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Input;
+using AnyTracker.Constants;
 using AnyTracker.Models;
 using AnyTracker.Pages;
 using AnyTracker.Services;
 using AnyTracker.Utilities;
 
+#endregion
+
 namespace AnyTracker.ViewModels;
 
 public class TrackingViewModel : BindableObject
 {
+    #region Private Fields
+
+    private readonly IDbService _dbService;
     private readonly INotificationService _notificationService;
     private TrackerConfig _currentConfig;
 
@@ -20,21 +28,31 @@ public class TrackingViewModel : BindableObject
     private bool _isTracking;
 
     private string _startStopButtonText;
+
     private DateTime _startTime;
 
     private IDispatcherTimer _timer;
 
     private string _trackerTitle;
 
-    public TrackingViewModel(INotificationService notificationService)
+    #endregion
+
+    #region Constructor
+
+    public TrackingViewModel(INotificationService notificationService, IDbService dbService)
     {
+        _dbService = dbService;
         _notificationService = notificationService;
         ToggleTrackingCommand = new Command(ToggleTracking);
         OpenSettingsCommand = new Command(OpenSettings);
 
         // Load default config
-        LoadTrackerConfig("config_fasting.json");
+        LoadTrackerConfig(AppConstants.DefaultTrackerFile);
     }
+
+    #endregion
+
+    #region Binding Properties
 
     // --- Bindable Properties ---
 
@@ -101,17 +119,24 @@ public class TrackingViewModel : BindableObject
         }
     }
 
+    #endregion
+
+    #region Commands
+
     // --- Commands ---
     public ICommand ToggleTrackingCommand { get; }
     public ICommand OpenSettingsCommand { get; }
 
-    public async void LoadTrackerConfig(string filename)
+    #endregion
+
+    #region Methods
+
+    private async void LoadTrackerConfig(string filename)
     {
         StopTracking(); // Reset state
         try
         {
             _currentConfig = await ResourceHelper.LoadJsonResourceFile<TrackerConfig>(filename);
-
 
             // Update UI
             Stages.Clear();
@@ -202,4 +227,6 @@ public class TrackingViewModel : BindableObject
         // Settings are usually a PushAsync (slide in from right)
         await Application.Current.MainPage.Navigation.PushAsync(settingsPage);
     }
+
+    #endregion
 }

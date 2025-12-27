@@ -6,5 +6,7 @@ public static class AppConstants
 
     public const string TrackerManifestFile = "tracker_manifest.json";
 
+    public const string DefaultTrackerFile = "fasting_config.json";
+
     public const string GitHubRepoUrl = "https://github.com/ordinarylinuxuser/anytracker";
 }

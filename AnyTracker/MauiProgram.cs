@@ -28,6 +28,7 @@ public static class MauiProgram
     // Dummy implementation for iOS/Windows to prevent crashes
         builder.Services.AddSingleton<INotificationService>(new MockNotificationService());
 #endif
+        builder.Services.AddSingleton<IDbService, DbService>();
         builder.Services.AddSingleton<TrackingViewModel>();
         builder.Services.AddSingleton<MainPage>();
         return builder.Build();
