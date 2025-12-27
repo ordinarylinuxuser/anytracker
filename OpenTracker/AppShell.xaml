@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Shell
+    x:Class="OpenTracker.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:OpenTracker.Pages"
+    xmlns:local="clr-namespace:OpenTracker"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarBackgroundColor="#1E1E1E"
+    Shell.TabBarTitleColor="#888888"
+    Shell.TabBarUnselectedColor="#888888"
+    Shell.TabBarForegroundColor="#2196F3">
+
+    <TabBar>
+        <Tab Title="Tracker" Icon="tracker">
+            <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+        </Tab>
+        <Tab Title="History" Icon="history">
+            <ShellContent ContentTemplate="{DataTemplate pages:HistoryPage}" />
+        </Tab>
+        <Tab Title="Settings" Icon="settings">
+            <ShellContent ContentTemplate="{DataTemplate pages:SettingsPage}" />
+        </Tab>
+    </TabBar>
+
+</Shell>
