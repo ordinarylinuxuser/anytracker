@@ -27,6 +27,9 @@ public class MainViewModel : BindableObject
     private IDispatcherTimer _timer;
     private string _trackerTitle;
 
+    private double _progress;
+    private double _maxHours = 24; // Default denominator
+
     // Preference Keys
     private const string PrefIsTracking = "IsTracking";
     private const string PrefStartTime = "TrackingStartTime";
@@ -124,6 +127,26 @@ public class MainViewModel : BindableObject
         }
     }
 
+    public double Progress
+    {
+        get => _progress;
+        set
+        {
+            _progress = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public double MaxHours
+    {
+        get => _maxHours;
+        set
+        {
+            _maxHours = value;
+            OnPropertyChanged();
+        }
+    }
+
     #endregion
 
     #region Commands
@@ -162,6 +185,13 @@ public class MainViewModel : BindableObject
         {
             s.Id = id++;
             Stages.Add(s);
+        }
+
+        if (_currentConfig.Stages.Count != 0)
+        {
+            MaxHours = _currentConfig.Stages.Max(s => s.EndHour);
+            // Prevent division by zero
+            if (MaxHours <= 0) MaxHours = 24;
         }
 
         TrackerTitle = _currentConfig.TrackerName;
@@ -272,6 +302,12 @@ public class MainViewModel : BindableObject
             ElapsedTimeFontSize = _currentConfig.ElapsedTimeFontSize;
 
             var totalHours = elapsed.TotalHours;
+            if (MaxHours > 0)
+            {
+                // Clamp between 0 and 1
+                Progress = Math.Clamp(totalHours / MaxHours, 0, 1);
+            }
+
             var activeStage = Stages.FirstOrDefault(s => totalHours >= s.StartHour && totalHours < s.EndHour);
 
             // If we are past the last stage, stay on the last stage or define behavior

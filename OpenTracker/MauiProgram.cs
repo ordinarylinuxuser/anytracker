@@ -1,5 +1,6 @@
 ﻿#region
 
+using DotNet.Meteor.HotReload.Plugin;
 using Microsoft.Extensions.Logging;
 using OpenTracker.Pages;
 using OpenTracker.Services;
@@ -16,6 +17,9 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+#if DEBUG
+            .EnableHotReload()
+#endif
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -25,7 +29,7 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
-// Register Platform Specific Service
+        // Register Platform Specific Service
 #if ANDROID
         builder.Services
             .AddSingleton<INotificationService, AndroidNotificationService>();
