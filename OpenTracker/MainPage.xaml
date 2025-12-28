@@ -2,6 +2,7 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:OpenTracker;assembly=OpenTracker"
              BackgroundColor="#121212"
              x:Class="OpenTracker.MainPage"
              NavigationPage.HasNavigationBar="False">
@@ -27,29 +28,47 @@
 
         <VerticalStackLayout Grid.Row="1" Padding="20" Spacing="20" HorizontalOptions="Center">
 
-            <Border Stroke="{Binding CurrentStage.ColorHex, FallbackValue='#555'}"
-                    StrokeThickness="6"
-                    StrokeShape="RoundRectangle 90"
-                    HeightRequest="180" WidthRequest="180"
-                    HorizontalOptions="Center"
-                    BackgroundColor="#1E1E1E">
+            <Grid HeightRequest="260" WidthRequest="260" HorizontalOptions="Center">
+                
+                <GraphicsView x:Name="StatusGraphicsView"
+                              InputTransparent="True"> 
+                    <GraphicsView.Drawable>
+                        <local:TrackerDrawable />
+                    </GraphicsView.Drawable>
+                </GraphicsView>
 
-                <VerticalStackLayout VerticalOptions="Center" Spacing="5">
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="5">
+                    
                     <Label Text="{Binding CurrentStage.Icon}"
                            FontSize="40"
                            HorizontalOptions="Center" />
 
-                    <Label Text="{Binding ElapsedTime}"
-                           TextColor="White"
-                           FontSize="{Binding ElapsedTimeFontSize, FallbackValue=36}"
-                           FontAttributes="Bold"
-                           HorizontalOptions="Center">
-                        <Label.GestureRecognizers>
+                    <Grid ColumnDefinitions="*, Auto, *" WidthRequest="260">
+                        <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding EditElapsedTimeCommand}" />
-                        </Label.GestureRecognizers>
-                    </Label>
+                        </Grid.GestureRecognizers>
+
+                        <Label Grid.Column="1"
+                               Text="{Binding ElapsedTime}"
+                               TextColor="White"
+                               FontSize="{Binding ElapsedTimeFontSize, FallbackValue=36}"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+
+                        <Label Grid.Column="2"
+                               Text="✏️"
+                               FontSize="10"
+                               TextColor="#666"
+                               HorizontalOptions="Start"
+                               VerticalOptions="Center"
+                               Margin="6,0,0,0"
+                               TranslationY="2"/>
+                    </Grid>
+                    
+                  
                 </VerticalStackLayout>
-            </Border>
+            </Grid>
 
             <Button Text="{Binding StartStopButtonText}"
                     Command="{Binding ToggleTrackingCommand}"

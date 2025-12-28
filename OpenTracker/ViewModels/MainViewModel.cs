@@ -27,6 +27,10 @@ public class MainViewModel : BindableObject
     private IDispatcherTimer _timer;
     private string _trackerTitle;
 
+    private double _progress;
+
+    private double _totalHours;
+
     // Preference Keys
     private const string PrefIsTracking = "IsTracking";
     private const string PrefStartTime = "TrackingStartTime";
@@ -46,8 +50,6 @@ public class MainViewModel : BindableObject
         EditElapsedTimeCommand = new Command(async () => await EditElapsedTime());
         // Listen for config changes from Settings
         _trackerService.OnTrackerChanged += OnConfigChanged;
-
-
         // Check if config is already loaded (from app startup)
         if (_trackerService.CurrentConfig != null) OnConfigChanged();
     }
@@ -124,6 +126,30 @@ public class MainViewModel : BindableObject
         }
     }
 
+    public double Progress
+    {
+        get => _progress;
+        set
+        {
+            _progress = value;
+            OnPropertyChanged();
+        }
+    }
+
+
+    public double TotalHours
+    {
+        get => _totalHours;
+        set
+        {
+            if (Math.Abs(_totalHours - value) > 0.001)
+            {
+                _totalHours = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
     #endregion
 
     #region Commands
@@ -163,6 +189,7 @@ public class MainViewModel : BindableObject
             s.Id = id++;
             Stages.Add(s);
         }
+
 
         TrackerTitle = _currentConfig.TrackerName;
         ElapsedTimeFontSize = _currentConfig.ElapsedTimeFontSize;
@@ -271,11 +298,12 @@ public class MainViewModel : BindableObject
         {
             ElapsedTimeFontSize = _currentConfig.ElapsedTimeFontSize;
 
-            var totalHours = elapsed.TotalHours;
-            var activeStage = Stages.FirstOrDefault(s => totalHours >= s.StartHour && totalHours < s.EndHour);
+            TotalHours = elapsed.TotalHours;
+
+            var activeStage = Stages.FirstOrDefault(s => TotalHours >= s.StartHour && TotalHours < s.EndHour);
 
             // If we are past the last stage, stay on the last stage or define behavior
-            if (activeStage == null && Stages.Any() && totalHours > Stages.Last().EndHour) activeStage = Stages.Last();
+            if (activeStage == null && Stages.Any() && TotalHours > Stages.Last().EndHour) activeStage = Stages.Last();
 
             if (activeStage != null && CurrentStage != activeStage)
             {
