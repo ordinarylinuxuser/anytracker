@@ -8,10 +8,10 @@ The app uses a flexible JSON-based architecture, allowing for infinite extensibi
 
 ## 📸 Application Pictures
 
-| Home Screen                                                                          | History & Analytics                                                                     | Settings                                                                                          |
-|--------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
-| <img src="OpenTracker/docs/screenshots/tracker.png" width="250" alt="Home Screen" /> | <img src="OpenTracker/docs/screenshots/history.png" width="250" alt="History Screen" /> | <img src="OpenTracker/docs/screenshots/tracker_selector.png" width="250" alt="Settings Screen" /> |
-| *Track active progress with visual stages*                                           | *View weekly charts and past sessions*                                                  | *Switch configurations instantly*                                                                 |
+| Tracker                                                                          | History & Analytics                                                                     | Tracker Selector                                                                                          |Tracker Editor                                                                                          |
+|--------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| <img src="OpenTracker/docs/screenshots/tracker.png" width="250" alt="Tracker" /> | <img src="OpenTracker/docs/screenshots/history.png" width="250" alt="History Screen" /> | <img src="OpenTracker/docs/screenshots/tracker_selector.png" width="250" alt="Trackor Selector" /> | <img src="OpenTracker/docs/screenshots/tracker_editor.png" width="250" alt="Settings Screen" /> |
+| *Track active progress with visual stages*                                           | *View weekly charts and past sessions*                                                  | *Switch configurations instantly*                                                                 | *Add or Edit Trackers according to your choice*                                                                 |
 
 ---
 
